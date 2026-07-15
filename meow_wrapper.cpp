@@ -29,6 +29,15 @@ extern "C" {
         return result;
     }
 
+    uint32_t MeowHash_32(void *Seed, uint64_t len, void *data) {
+        __m128i hash = MeowHash(Seed, len, data);
+    
+        alignas(16) uint64_t out[2];
+        _mm_storeu_si128((__m128i*)out, hash);
+    
+        return (uint32_t)(out[0]);  // lower 32 bits
+    }
+
     // Exporta o ponteiro para o Seed Padrão.
     void* GetMeowDefaultSeed() {
         return (void*)MeowDefaultSeed;
